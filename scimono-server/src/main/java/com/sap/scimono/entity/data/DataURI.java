@@ -80,9 +80,10 @@ public class DataURI {
       throw new InvalidInputException("The given inputStream can't be null.");
     }
 
-    InputStream bufferedStream = new BufferedInputStream(inputStream);
-    String mimeType = URLConnection.guessContentTypeFromStream(bufferedStream);
-    uri = convertInputStreamToDataURI(inputStream, mimeType);
+    try (InputStream bufferedStream = new BufferedInputStream(inputStream)) {
+      String mimeType = URLConnection.guessContentTypeFromStream(bufferedStream);
+      uri = convertInputStreamToDataURI(bufferedStream, mimeType);
+    }
   }
 
   private URI convertInputStreamToDataURI(final InputStream inputStream, final String mimeType) throws IOException {

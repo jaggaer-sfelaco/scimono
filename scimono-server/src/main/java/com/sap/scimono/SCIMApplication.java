@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +16,7 @@ import com.sap.scimono.api.Bulk;
 import com.sap.scimono.api.Groups;
 import com.sap.scimono.api.ResourceTypes;
 import com.sap.scimono.api.Schemas;
+import com.sap.scimono.api.SecurityHeadersFilter;
 import com.sap.scimono.api.ServiceProviderConfiguration;
 import com.sap.scimono.api.ServletRequestProviderFilter;
 import com.sap.scimono.api.Users;
@@ -78,6 +79,7 @@ public abstract class SCIMApplication extends Application {
     scimResources.add(ScimExceptionMapper.class);
 
     scimResources.add(ServletRequestProviderFilter.class);
+    scimResources.add(SecurityHeadersFilter.class);
 
     logger.info("Initializing SCIM resource providers {}", scimResources);
     return scimResources;

@@ -5,12 +5,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -37,7 +39,7 @@ public class UsersTest {
   ArgumentCaptor<PatchBody> patchBodyCaptor = ArgumentCaptor.forClass(PatchBody.class);
   private final String PATCH_OP_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:PatchOp";
 
-  @Before
+  @BeforeEach
   public void setup() {
     mapper = new ObjectMapper();
     SCIMApplication scimApplication = new SCIMApplication() {
@@ -55,16 +57,16 @@ public class UsersTest {
     users = new Users(scimApplication, null);
   }
 
-  @Test(expected = InvalidInputException.class)
+  @Test
   public void testUpdateUserWithEmptyBody() {
     String userId = String.valueOf(UUID.randomUUID());
-    users.updateUser(userId, null);
+    assertThrows(InvalidInputException.class, () -> users.updateUser(userId, null));
   }
 
-  @Test(expected = InvalidInputException.class)
+  @Test
   public void testPatchUserWithEmptyBody() {
     String userId = String.valueOf(UUID.randomUUID());
-    users.patchUser(userId, null);
+    assertThrows(InvalidInputException.class, () -> users.patchUser(userId, null));
   }
 
   @Test
@@ -90,11 +92,11 @@ public class UsersTest {
     users.patchUser(userId, patchBody);
 
     Mockito.verify(usersCallbackMock).patchUser(userIdCaptor.capture(), patchBodyCaptor.capture(), Mockito.any());
-    Assert.assertEquals(userId, userIdCaptor.getValue());
-    Assert.assertEquals(patchBody, patchBodyCaptor.getValue());
+    Assertions.assertEquals(userId, userIdCaptor.getValue());
+    Assertions.assertEquals(patchBody, patchBodyCaptor.getValue());
   }
 
-  @Test(expected = ResourceNotFoundException.class)
+  @Test
   @DisplayName("Test patch user with non existing resource and remove operation on a not removable attribute. The existence of the resource given in the path should be validated first. Expected ResourceNotFoundException (404).")
   public void testPatchUserNonExistingResource() throws JsonProcessingException {
     Mockito.doNothing().when(usersCallbackMock).patchUser(Mockito.any(), Mockito.any(), Mockito.any());
@@ -115,10 +117,10 @@ public class UsersTest {
         .addOperation(patchOperation1)
         .setSchemas(schemas)
         .build();
-    users.patchUser(userId, patchBody);
+    assertThrows(ResourceNotFoundException.class, () -> users.patchUser(userId, patchBody));
   }
 
-  @Test(expected = InvalidInputException.class)
+  @Test
   @DisplayName("Test patch user with existing resource and remove operation on a not removable attribute. Expected InvalidInputException (400) since this is not allowed.")
   public void testPatchUserExistingResource() throws JsonProcessingException {
     Mockito.doNothing().when(usersCallbackMock).patchUser(Mockito.any(), Mockito.any(), Mockito.any());
@@ -140,7 +142,7 @@ public class UsersTest {
         .addOperation(patchOperation1)
         .setSchemas(schemas)
         .build();
-    users.patchUser(userId, patchBody);
+    assertThrows(InvalidInputException.class, () -> users.patchUser(userId, patchBody));
   }
 
   private JsonNode getValueTrue() throws JsonProcessingException {

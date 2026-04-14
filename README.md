@@ -20,11 +20,11 @@ SCIMono provides drop-in support for serving a SCIM v2 API. Supported features:
  
 # Requirements
 
- * [Java 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) or higher
- * [Apache Maven 3.0](https://maven.apache.org) or higher
- * JAX-RS Reference Implementation ([Jersey](https://jersey.github.io), [Apache CXF](http://cxf.apache.org))
+ * [Java 25](https://jdk.java.net/25/) or higher
+ * [Apache Maven 3.9](https://maven.apache.org) or higher
+ * Jakarta RESTful Web Services Implementation ([Jersey](https://eclipse-ee4j.github.io/jersey/), [Apache CXF](http://cxf.apache.org))
  * [ANTLR 4.x](https://www.antlr.org) (filter syntax grammar)
- * [SLF4J 1.7.x](https://www.slf4j.org)
+ * [SLF4J 2.0.x](https://www.slf4j.org)
  
 # Download and Installation
 ## Download
@@ -54,7 +54,7 @@ mvn clean install
   ```java
     import com.sap.scimono.SCIMApplication;
     
-    import javax.ws.rs.ApplicationPath;
+    import jakarta.ws.rs.ApplicationPath;
     
     @ApplicationPath("scim")
     public class MySCIMApi extends SCIMApplication {}
@@ -87,7 +87,7 @@ import com.sap.scimono.callback.schemas.SchemasCallback;
 import com.sap.scimono.callback.users.UsersCallback;
 import com.sap.scimono.callback.users.ResourceTypesCallback;
 
-import javax.ws.rs.ApplicationPath;
+import jakarta.ws.rs.ApplicationPath;
 
 @ApplicationPath("scim")
 public class MySCIMApi extends SCIMApplication {
@@ -122,7 +122,7 @@ The library also provides an extension point for custom resources. Example snipp
 ```java
 import com.sap.scimono.SCIMApplication;
 
-import javax.ws.rs.ApplicationPath;
+import jakarta.ws.rs.ApplicationPath;
 import java.util.Set;
 
 @ApplicationPath("scim")
